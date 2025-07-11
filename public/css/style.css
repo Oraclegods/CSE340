@@ -1,0 +1,213 @@
+/* Reset and box model */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* Outer body background */
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  line-height: 1.6;
+  background: url("/images/small_Check.jpg") repeat;
+  color: #222;
+  padding: 1rem;
+}
+
+/* Inner white box that holds all the main content */
+#wrapper {
+  max-width: 960px;
+  margin: auto;
+  padding: 1rem;
+  background-color: white;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  border-radius: 10px;
+}
+
+/* Header styles */
+header {
+  background-color: #6cc;
+  padding: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #222;
+}
+
+.account-link {
+  font-size: 0.9rem;
+  color: #222;
+  text-decoration: none;
+}
+
+/* Navigation bar */
+nav {
+  background-color: #2a2a3a;
+  margin-top: 1rem;
+}
+
+.nav-bar {
+  display: flex;
+  flex-direction: column;
+  list-style: none;
+  text-align: center;
+  padding: 1rem 0;
+}
+
+.nav-bar li {
+  margin: 0.4rem 0;
+}
+
+.nav-bar li a {
+  color: white;
+  background-color: #00a0a0;
+  padding: 0.75rem 1.2rem;
+  display: inline-block;
+  text-decoration: none;
+  border-radius: 5px;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+.nav-bar li a:hover {
+  background-color: #008080;
+}
+
+/* Hero section */
+.hero {
+  text-align: center;
+  margin: 1.5rem 0;
+}
+
+.hero img {
+  max-width: 100%;
+  height: auto;
+}
+
+.hero h1 {
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.hero p {
+  color: #00a0a0;
+  font-weight: bold;
+}
+
+.cta-button {
+  background-color: #00bcd4;
+  color: white;
+  padding: 0.5rem 1rem;
+  text-decoration: none;
+  font-weight: bold;
+  margin-top: 0.5rem;
+  display: inline-block;
+  border: none;
+  border-radius: 4px;
+}
+
+/* Reviews and upgrades */
+h2 {
+  margin-top: 1.5rem;
+  font-size: 1.25rem;
+}
+
+ul.reviews {
+  margin: 1rem 0;
+  padding-left: 1.5rem;
+}
+
+ul.reviews li {
+  margin-bottom: 0.5rem;
+}
+
+/* Upgrade grid */
+.upgrade-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+  margin: 1rem 0;
+}
+
+.upgrade-grid figure {
+  background-color: #00a0a0;
+  padding: 0.5rem;
+  text-align: center;
+  border-radius: 5px;
+}
+
+.upgrade-grid img {
+  max-width: 100%;
+  height: auto;
+}
+
+.upgrade-grid figcaption a {
+  text-decoration: none;
+  color: blue;
+  font-size: 0.9rem;
+}
+
+/* Footer */
+footer {
+  text-align: center;
+  font-size: 0.8rem;
+  padding: 1rem 0;
+  margin-top: 2rem;
+}
+
+/* Responsive layout for larger screens */
+@media screen and (min-width: 768px) {
+  body {
+    background: url("/images/checherboard.jpg") repeat;
+    padding: 2rem;
+  }
+
+  .nav-bar {
+    flex-direction: row;
+    justify-content: center;
+    gap: 1rem;
+  }
+
+  .nav-bar li {
+    margin: 0;
+  }
+
+  .hero {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2rem;
+  }
+
+  .hero-text {
+    flex: 1;
+    text-align: left;
+  }
+
+  .hero img {
+    max-width: 50%;
+    height: auto;
+  }
+
+  .grid {
+    display: flex;
+    justify-content: space-between;
+    gap: 2rem;
+  }
+
+  .upgrades,
+  .reviews {
+    flex: 1;
+  }
+
+  .upgrade-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
