@@ -1,36 +1,39 @@
-/* Exact Match to Reference Images - Mobile First */
+/* ===== BASE STYLES ===== */
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Arial', sans-serif;
     margin: 0;
     padding: 0;
     background-color: white;
+    color: #333;
 }
 
-.content-box {
+#wrapper {
     width: 100%;
     margin: 0 auto;
     background: white;
 }
 
+/* ===== HEADER & NAVIGATION ===== */
 .main-header {
     background: black;
     color: white;
     padding: 1rem;
     border-bottom: 2px solid #333;
+    text-align: center;
 }
 
 .main-header h1 {
     margin: 0;
     font-size: 1.8rem;
-    text-align: center;
 }
 
 nav ul {
     display: flex;
-    justify-content: space-around;
+    justify-content: center;
     list-style: none;
-    padding: 1rem 0 0 0;
+    padding: 1rem 0 0;
     margin: 0;
+    gap: 1rem;
 }
 
 nav a {
@@ -38,11 +41,17 @@ nav a {
     text-decoration: none;
     font-weight: bold;
     padding: 0.5rem 1rem;
+    border-radius: 3px;
+    transition: background 0.3s;
 }
 
-nav a.active {
+nav a:hover, nav a.active {
     background: #333;
-    border-radius: 3px;
+}
+
+/* ===== MAIN CONTENT ===== */
+.content-box {
+    padding: 0;
 }
 
 .welcome-banner {
@@ -61,7 +70,7 @@ nav a.active {
 
 .featured-vehicle h2 {
     color: #333;
-    margin: 0 0 1.5rem 0;
+    margin: 0 0 1.5rem;
     font-size: 1.5rem;
 }
 
@@ -74,6 +83,7 @@ nav a.active {
     width: 100%;
     max-width: 500px;
     margin: 0 auto;
+    border-radius: 5px;
 }
 
 .vehicle-features {
@@ -84,12 +94,13 @@ nav a.active {
     max-width: 300px;
     border-radius: 5px;
     box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    position: relative;
 }
 
 .vehicle-features ul {
     list-style: none;
     padding: 0;
-    margin: 0 0 1.5rem 0;
+    margin: 0 0 1.5rem;
 }
 
 .vehicle-features li {
@@ -116,21 +127,25 @@ nav a.active {
     width: 100%;
     border-radius: 3px;
     font-weight: bold;
+    transition: background 0.3s;
 }
 
+.own-today-btn:hover {
+    background-color: #c9302c;
+}
+
+/* ===== UPGRADES & REVIEWS ===== */
 .main-sections {
     display: flex;
     flex-direction: column;
     padding: 2rem;
+    gap: 2rem;
 }
 
-.upgrades-section, .reviews-section {
-    margin-bottom: 2rem;
-}
-
-.upgrades-section h2, .reviews-section h2 {
+.upgrades-section h2, 
+.reviews-section h2 {
     color: #333;
-    margin: 0 0 1.5rem 0;
+    margin: 0 0 1.5rem;
     font-size: 1.5rem;
     border-bottom: 2px solid #d9534f;
     padding-bottom: 0.5rem;
@@ -147,18 +162,19 @@ nav a.active {
 }
 
 .upgrade-image {
-    background: #e6f0ff;
     padding: 1.5rem;
     border-radius: 5px;
     height: 120px;
     display: flex;
     align-items: center;
     justify-content: center;
+    margin-bottom: 0.5rem;
 }
 
 .upgrade-image img {
     max-width: 100%;
     max-height: 100%;
+    object-fit: contain;
 }
 
 .reviews-section ul {
@@ -180,6 +196,7 @@ nav a.active {
     color: #d9534f;
 }
 
+/* ===== FOOTER ===== */
 .main-footer {
     background: black;
     color: white;
@@ -188,14 +205,14 @@ nav a.active {
     font-size: 0.9rem;
 }
 
-/* Desktop Layout with Checkerboard */
+/* ===== DESKTOP LAYOUT ===== */
 @media screen and (min-width: 768px) {
     body {
         background: url("/images/site/checkerboard.jpg") repeat;
         padding: 2rem;
     }
 
-    .content-box {
+    #wrapper {
         max-width: 1000px;
         box-shadow: 0 0 15px rgba(0,0,0,0.2);
         border-radius: 8px;
@@ -230,5 +247,9 @@ nav a.active {
     .reviews-section {
         width: 50%;
         padding-left: 2rem;
+    }
+
+    .upgrades-grid {
+        grid-template-columns: repeat(2, 1fr);
     }
 }

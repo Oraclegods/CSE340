@@ -1,91 +1,59 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CSE Motors</title>
-    <link rel="stylesheet" href="/css/styles.css" media="screen">
-</head>
-<body>
-    <div class="content-box">
-        <header class="main-header">
-            <h1>CSE Motors</h1>
-            <nav>
-                <ul>
-                    <li><a href="#" class="active">Home</a></li>
-                    <li><a href="#">Custom</a></li>
-                    <li><a href="#">Sedan</a></li>
-                    <li><a href="#">SUV</a></li>
-                    <li><a href="#">Truck</a></li>
-                </ul>
-            </nav>
-        </header>
+<!-- Only contains page-specific content (no layout/boilerplate) -->
+<section class="welcome-banner">
+    <h2>Welcome to CSE Motors!</h2>
+</section>
 
-        <section class="welcome-banner">
-            <h2>Welcome to CSE Motors!</h2>
-        </section>
-
-        <section class="featured-vehicle">
-            <h2>DMC Delorean</h2>
-            <div class="vehicle-container">
-                <img src="/images/vehicles/delorean.jpg" alt="DMC Delorean" class="vehicle-image">
-                <div class="vehicle-features">
-                    <ul>
-                        <li>3 Cup holders</li>
-                        <li>Superman doors</li>
-                        <li>Fuzzy dice</li>
-                    </ul>
-                    <button class="own-today-btn">Own Today</button>
-                </div>
-            </div>
-        </section>
-
-        <div class="main-sections">
-            <section class="upgrades-section">
-                <h2>Delorean Upgrades</h2>
-                <div class="upgrades-grid">
-                    <div class="upgrade-item">
-                        <div class="upgrade-image" style="background-color: #e6f0ff;">
-                            <img src="/images/upgrades/flux-cap.png" alt="Flux Capacitor">
-                        </div>
-                        <p>Flux Capacitor</p>
-                    </div>
-                    <div class="upgrade-item">
-                        <div class="upgrade-image" style="background-color: #e6f0ff;">
-                            <img src="/images/upgrades/flame.jpg" alt="Flame Decals">
-                        </div>
-                        <p>Flame Decals</p>
-                    </div>
-                    <div class="upgrade-item">
-                        <div class="upgrade-image" style="background-color: #e6f0ff;">
-                            <img src="/images/upgrades/bumper_sticker.jpg" alt="Bumper Stickers">
-                        </div>
-                        <p>Bumper Stickers</p>
-                    </div>
-                    <div class="upgrade-item">
-                        <div class="upgrade-image" style="background-color: #e6f0ff;">
-                            <img src="/images/upgrades/hub-cap.jpg" alt="Hub Caps">
-                        </div>
-                        <p>Hub Caps</p>
-                    </div>
-                </div>
-            </section>
-
-            <section class="reviews-section">
-                <h2>DMC Delorean Reviews</h2>
-                <ul>
-                    <li>"So fast it's almost like traveling in time." (4/5)</li>
-                    <li>"Coolest ride on the road." (4/5)</li>
-                    <li>"I'm feeling McFly!" (5/5)</li>
-                    <li>"The most futuristic ride of our day." (4.5/5)</li>
-                    <li>"80's livin and I love it!" (5/5)</li>
-                </ul>
-            </section>
+<section class="featured-vehicle">
+    <h2>DMC Delorean</h2>
+    <div class="vehicle-container">
+        <img src="/images/vehicles/delorean.jpg" alt="DMC Delorean" class="vehicle-image">
+        <div class="vehicle-features">
+            <ul>
+                <li>3 Cup holders</li>
+                <li>Superman doors</li>
+                <li>Fuzzy dice</li>
+            </ul>
+            <button class="own-today-btn">Own Today</button>
         </div>
-
-        <footer class="main-footer">
-            <p>&copy; 2023, CSE 340 App</p>
-        </footer>
     </div>
-</body>
-</html>
+</section>
+
+<div class="main-sections">
+    <section class="upgrades-section">
+        <h2>Delorean Upgrades</h2>
+        <div class="upgrades-grid">
+            <% const upgrades = [
+                { img: 'flux-cap.png', name: 'Flux Capacitor' },
+                { img: 'flame.jpg', name: 'Flame Decals' },
+                { img: 'bumper_sticker.jpg', name: 'Bumper Stickers' },
+                { img: 'hub-cap.jpg', name: 'Hub Caps' }
+            ]; %>
+            
+            <% upgrades.forEach(upgrade => { %>
+                <div class="upgrade-item">
+                    <div class="upgrade-image" style="background-color: #e6f0ff;">
+                        <img src="/images/upgrades/<%= upgrade.img %>" alt="<%= upgrade.name %>">
+                    </div>
+                    <p><%= upgrade.name %></p>
+                </div>
+            <% }); %>
+        </div>
+    </section>
+
+    <section class="reviews-section">
+        <h2>DMC Delorean Reviews</h2>
+        <ul>
+            <% const reviews = [
+                "So fast it's almost like traveling in time. (4/5)",
+                "Coolest ride on the road. (4/5)",
+                "I'm feeling McFly! (5/5)",
+                "The most futuristic ride of our day. (4.5/5)",
+                "80's livin and I love it! (5/5)"
+            ]; %>
+            
+            <% reviews.forEach(review => { %>
+                <li><%= review %></li>
+            <% }); %>
+        </ul>
+    </section>
+</div>
