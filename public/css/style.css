@@ -138,6 +138,15 @@ nav a:hover, nav a.active {
 }
 
 /* ===== UPGRADES & REVIEWS ===== */
+
+.reviews-section {
+    order: -1;
+}
+
+.upgrades-section {
+    order: 0;
+}
+
 .main-sections {
     display: flex;
     flex-direction: column;
