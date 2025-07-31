@@ -1,0 +1,67 @@
+<main class="vehicle-detail-container">
+  <div class="certification-banner">
+    <p>This vehicle has passed inspection by an ASE-certified technician.</p>
+    <p class="enterprise-certified">enterprise.certified</p>
+  </div>
+  
+  <div class="vehicle-content">
+    <div class="vehicle-image-container">
+      <img src="<%= vehicle.inv_image %>" alt="Image of <%= vehicle.inv_make %> <%= vehicle.inv_model %>" class="vehicle-image">
+    </div>
+    
+    <div class="vehicle-info">
+      <h1><%= vehicle.inv_year %> <%= vehicle.inv_make %> <%= vehicle.inv_model %> <%= vehicle.inv_trim || '' %></h1>
+      <p class="stock-number">Stock #: <%= vehicle.inv_stock || 'N/A' %></p>
+      <p class="vin-number">VIN: <%= vehicle.inv_vin || 'N/A' %></p>
+      
+      <div class="price-mileage">
+        <div class="price-container">
+          <p class="price-label">No-Haggle Price</p>
+          <p class="price">$<%= Number(vehicle.inv_price).toLocaleString() %></p>
+        </div>
+        <div class="mileage-container">
+          <p class="mileage"><%= Number(vehicle.inv_miles).toLocaleString() %> miles</p>
+        </div>
+      </div>
+      
+      <div class="specs-grid">
+        <div class="spec-item">
+          <span class="spec-label">MPG:</span>
+          <span class="spec-value"><%= vehicle.inv_mpg_city || 'N/A' %>/<%= vehicle.inv_mpg_hwy || 'N/A' %> (City/Hwy)</span>
+        </div>
+        <div class="spec-item">
+          <span class="spec-label">Ext. Color:</span>
+          <span class="spec-value"><%= vehicle.inv_color || 'Unknown' %></span>
+        </div>
+        <div class="spec-item">
+          <span class="spec-label">Int. Color:</span>
+          <span class="spec-value"><%= vehicle.inv_interior_color || 'Unknown' %></span>
+        </div>
+        <div class="spec-item">
+          <span class="spec-label">Fuel Type:</span>
+          <span class="spec-value"><%= vehicle.inv_fuel_type || 'Gasoline' %></span>
+        </div>
+        <div class="spec-item">
+          <span class="spec-label">Drivetrain:</span>
+          <span class="spec-value"><%= vehicle.inv_drivetrain || 'Front Wheel Drive' %></span>
+        </div>
+        <div class="spec-item">
+          <span class="spec-label">Transmission:</span>
+          <span class="spec-value"><%= vehicle.inv_transmission || 'Automatic' %></span>
+        </div>
+      </div>
+      
+      <div class="action-buttons">
+        <button class="estimate-payments">ESTIMATE PAYMENTS</button>
+        <button class="start-purchase">START MY PURCHASE</button>
+        <button class="test-drive">SCHEDULE TEST DRIVE</button>
+        <button class="apply-financing">APPLY FOR FINANCING</button>
+      </div>
+      
+      <div class="contact-info">
+        <p class="call-us">Call Us: 800-396-7886</p>
+        <p class="visit-us">Visit Us: [Dealer Address]</p>
+      </div>
+    </div>
+  </div>
+</main>

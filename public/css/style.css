@@ -267,3 +267,129 @@ nav a:hover, nav a.active {
         grid-template-columns: repeat(2, 1fr);
     }
 }
+
+
+/* Vehicle Detail Page Styles */
+.vehicle-detail-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+.certification-banner {
+  background-color: #f5f5f5;
+  padding: 10px;
+  text-align: center;
+  border-bottom: 1px solid #ddd;
+  margin-bottom: 20px;
+}
+
+.enterprise-certified {
+  font-weight: bold;
+  color: #0066cc;
+  margin-top: 5px;
+}
+
+.vehicle-content {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 30px;
+}
+
+.vehicle-image-container {
+  flex: 1;
+  min-width: 300px;
+}
+
+.vehicle-image {
+  width: 100%;
+  height: auto;
+  border-radius: 5px;
+}
+
+.vehicle-info {
+  flex: 1;
+  min-width: 300px;
+}
+
+.price-mileage {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 20px 0;
+  padding: 15px;
+  background-color: #f9f9f9;
+  border-radius: 5px;
+}
+
+.price-label {
+  font-size: 14px;
+  color: #666;
+  margin: 0;
+}
+
+.price {
+  font-size: 28px;
+  font-weight: bold;
+  color: #0066cc;
+  margin: 5px 0 0 0;
+}
+
+.mileage {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.specs-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 15px;
+  margin: 25px 0;
+}
+
+.spec-item {
+  display: flex;
+}
+
+.spec-label {
+  font-weight: bold;
+  min-width: 100px;
+}
+
+.action-buttons {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  margin: 30px 0;
+}
+
+.action-buttons button {
+  padding: 12px;
+  border: none;
+  border-radius: 5px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.estimate-payments, .test-drive {
+  background-color: #fff;
+  border: 1px solid #0066cc;
+  color: #0066cc;
+}
+
+.start-purchase, .apply-financing {
+  background-color: #0066cc;
+  color: white;
+}
+
+.contact-info {
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid #ddd;
+}
+
+.call-us, .visit-us {
+  margin: 5px 0;
+  font-weight: bold;
+}
