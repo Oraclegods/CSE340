@@ -1,0 +1,18 @@
+
+<main class="classification-view">
+  <h1><%= classification.toUpperCase() %></h1>
+  <% if (vehicles.length > 0) { %>
+<div class="vehicle-thumbnails">
+  <% vehicles.forEach(vehicle => { %>
+    <a href="/inventory/<%= vehicle.inv_id %>" class="vehicle-thumbnail">
+      <img src="<%= vehicle.image_path %>"
+           onerror="this.src='/images/vehicles/default-car.jpg'"
+           alt="<%= vehicle.inv_make %> <%= vehicle.inv_model %>">
+      <p><%= vehicle.inv_year %> <%= vehicle.inv_make %> <%= vehicle.inv_model %></p>
+    </a>
+  <% }); %>
+</div>
+  <% } else { %>
+    <p class="no-vehicles">No vehicles found in this classification.</p>
+  <% } %>
+</main>

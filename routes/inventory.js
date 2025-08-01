@@ -8,6 +8,10 @@ router.get('/test', (req, res) => {
   res.send("Inventory router is working!");
 });
 
+// I ADDed this new classification route
+router.get("/classification/:classification", 
+  utilities.handleErrors(inventoryController.buildByClassification));
+
 // Vehicle detail route - using handleErrors from utilities
 router.get("/:inv_id", utilities.handleErrors(inventoryController.buildVehicleDetail));
 
