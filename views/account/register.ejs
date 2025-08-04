@@ -1,0 +1,83 @@
+<%- include('../partials/head', { title: title }) %>
+<body>
+
+  <main class="registration-main">
+    <div class="registration-container">
+      <% if (locals.flashMessage) { %>
+        <div class="flash-message">
+          <%= flashMessage %>
+        </div>
+      <% } %>
+
+      <h1><%= title %></h1>
+
+      <form action="/account/register" method="POST">
+        <div class="form-group">
+          <label for="account_firstname">First name:</label>
+          <input 
+            type="text" 
+            id="account_firstname" 
+            name="account_firstname" 
+            required
+          >
+        </div>
+
+        <div class="form-group">
+          <label for="account_lastname">Last name:</label>
+          <input 
+            type="text" 
+            id="account_lastname" 
+            name="account_lastname" 
+            required
+          >
+        </div>
+
+        <div class="form-group">
+          <label for="account_email">Email address:</label>
+          <input 
+            type="email" 
+            id="account_email" 
+            name="account_email" 
+            required
+          >
+        </div>
+
+        <div class="form-group password-group">
+          <label for="account_password">Password:</label>
+          <div class="password-input-container">
+            <input 
+              type="password" 
+              id="account_password" 
+              name="account_password" 
+              required
+              minlength="12"
+            >
+            <button type="button" class="toggle-password">👁️</button>
+          </div>
+          <div class="password-requirements">
+            <p>Password must:</p>
+            <ul>
+              <li>Be at least 12 characters</li>
+              <li>Contain 1 capital letter</li>
+              <li>Contain 1 number</li>
+              <li>Contain 1 special character</li>
+            </ul>
+          </div>
+        </div>
+
+        <button type="submit" class="register-button">Register</button>
+      </form>
+    </div>
+  </main>
+
+
+  <script>
+    document.querySelector('.toggle-password').addEventListener('click', function() {
+      const passwordInput = document.querySelector('#account_password');
+      const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+      passwordInput.setAttribute('type', type);
+      this.textContent = type === 'password' ? '👁️' : '🔒';
+    });
+  </script>
+</body>
+</html>

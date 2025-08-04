@@ -63,6 +63,9 @@ app.get("/", utilities.handleErrors(baseController.buildHome))
 app.use("/inventory", inventoryRoute)
 
 
+// account route files
+app.use('/account', require('./routes/accountRoute'));
+
 // File Not Found Route - must be last route in list
 app.use(async (req, res, next) => {
   next({status: 500, message: 'Sorry, we appear to have lost that page.'})
