@@ -14,6 +14,6 @@ router.post('/authenticate', utilities.handleErrors(accountController.authentica
 
 
 router.get('/register', utilities.handleErrors(accountController.buildRegister));
-router.post('/register', utilities.handleErrors(accountController.registerAccount)); 
+router.post('/register', utilities.handleErrors(accountController.accountRegister)); 
 
 module.exports = router;

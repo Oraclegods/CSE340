@@ -2,27 +2,28 @@
  * This server.js file is the primary file of the 
  * application. It is used to control the project.
  *******************************************/
+
 /* ***********************
  * Require Statements
  *************************/
-const session = require("express-session")
-const pool = require('./database/')
-const expressLayouts = require("express-ejs-layouts")
-const express = require("express")
-const utilities = require("./utilities")
-const baseController = require("./controllers/baseController")
-const errorHandler = require("./middleware/errorHandler") // middleware error handler 
-const inventoryRoute = require("./routes/inventory") // inventory route
-const env = require("dotenv").config()
-const app = express()
-const static = require("./routes/static")
-
-
+const session = require("express-session");
+const pool = require('./database/');
+const expressLayouts = require("express-ejs-layouts");
+const express = require("express");
+const utilities = require("./utilities");
+const baseController = require("./controllers/baseController");
+const errorHandler = require("./middleware/errorHandler");
+const inventoryRoute = require("./routes/inventory");
+const env = require("dotenv").config();
+const app = express();
+const static = require("./routes/static");
 
 /* ***********************
- * Middleware
- * ************************/
- app.use(session({
+ * Middleware - PROPER ORDER IS CRITICAL
+ *************************/
+
+// 1. Session middleware (required for flash messages)
+app.use(session({
   store: new (require('connect-pg-simple')(session))({
     createTableIfMissing: true,
     pool,
@@ -31,79 +32,70 @@ const static = require("./routes/static")
   resave: true,
   saveUninitialized: true,
   name: 'sessionId',
-}))
+}));
 
-
-// Express Messages Middleware
-app.use(require('connect-flash')())
+// 2. Flash messages (requires session)
+app.use(require('connect-flash')());
 app.use(function(req, res, next){
-  res.locals.messages = require('express-messages')(req, res)
-  next()
-})
+  res.locals.messages = require('express-messages')(req, res);
+  next();
+});
+
+// 3. Body parsers (MUST come before routes)
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+// 4. View engine setup
+app.set("view engine", "ejs");
+app.use(expressLayouts);
+app.set("layout", "./layouts/layout");
 
 /* ***********************
- * View Engine and Templates
+ * Routes - MOUNTED AFTER ALL MIDDLEWARE
  *************************/
 
-app.set("view engine", "ejs")
-app.use(expressLayouts)
-app.set("layout", "./layouts/layout") // not at views root
+// Static routes
+app.use(static);
 
-/* ***********************
- * Routes
- *************************/
-app.use(static)
-// index route
-app.get("/", utilities.handleErrors(baseController.buildHome))
+// Index route
+app.get("/", utilities.handleErrors(baseController.buildHome));
 
-/* ***********************
- * inventory route
- * 
- *************************/
-app.use("/inventory", inventoryRoute)
+// Inventory routes
+app.use("/inventory", inventoryRoute);
 
-
-// account route files
+// Account routes (now body parsing will work)
 app.use('/account', require('./routes/accountRoute'));
 
-// File Not Found Route - must be last route in list
-app.use(async (req, res, next) => {
-  next({status: 500, message: 'Sorry, we appear to have lost that page.'})
-})
-
-
 /* ***********************
-* Express Error Handler
-* Place after all other middleware
-*************************/
+ * Error Handling - LAST MIDDLEWARE
+ *************************/
+
+// 404 handler
+app.use(async (req, res, next) => {
+  next({status: 404, message: 'Sorry, we appear to have lost that page.'});
+});
+
+// Error handler
 app.use(async (err, req, res, next) => {
-  let nav = await utilities.getNav()
-  console.error(`Error at: "${req.originalUrl}": ${err.message}`)
-  if(err.status == 404){ message = err.message} else {message = 'Oh no! There was a crash. Maybe try a different route?'}
+  let nav = await utilities.getNav();
+  console.error(`Error at: "${req.originalUrl}": ${err.message}`);
+  const message = err.status == 404 ? err.message : 'Oh no! There was a crash. Maybe try a different route?';
   res.render("errors/error", {
     title: err.status || 'Server Error',
     message,
     nav
-  })
-})
+  });
+});
+
+// Custom error handler middleware
+app.use(errorHandler);
 
 /* ***********************
- * middleware error handler
- * 
+ * Server Startup
  *************************/
-app.use(errorHandler)
+const port = process.env.PORT;
+const host = process.env.HOST;
 
-
-/* ***********************
- * Local Server Information
- * Values from .env (environment) file
- *************************/
-const port = process.env.PORT
-const host = process.env.HOST
-
-/* ***********************
- * Log statement to confirm server operation
- *************************/
 app.listen(port, () => {
-  console.log(`app listening on ${host}:${port}`)
-})
+  console.log(`app listening on ${host}:${port}`);
+});
