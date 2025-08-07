@@ -1,17 +1,30 @@
 <%- include('../partials/head', { title: 'Login' }) %>
 <body>
-
-  <main class="login-main">
+  <main class="login-main" aria-label="Login form">
     <div class="login-container">
-      <% if (locals.flashMessage) { %>
-        <div class="flash-message">
-          <%= flashMessage %>
+      <% if (errors && errors.length > 0) { %>
+        <div class="error-messages" role="alert">
+          <% errors.forEach(error => { %>
+            <p class="error-text"><%= error.msg %></p>
+          <% }); %>
         </div>
       <% } %>
 
-      <h1>Login</h1>
+      <% if (flashMessages && flashMessages.error) { %>
+        <div class="flash-message error" role="alert">
+          <%= flashMessages.error %>
+        </div>
+      <% } %>
 
-      <form action="/accounts/authenticate" method="POST">
+      <% if (flashMessages && flashMessages.success) { %>
+        <div class="flash-message success" role="status">
+          <%= flashMessages.success %>
+        </div>
+      <% } %>
+
+      <h1 class="login-title">Login</h1>
+
+      <form id="loginForm" action="/account/login" method="POST" novalidate>
         <div class="form-group">
           <label for="account_email">Email:</label>
           <input 
@@ -19,27 +32,66 @@
             id="account_email" 
             name="account_email" 
             required
+            placeholder="example@domain.com"
+            value="<%= typeof account_email !== 'undefined' ? account_email : '' %>"
+            aria-describedby="email-help"
+            class="<%= errors && errors.some(e => e.param === 'account_email') ? 'invalid' : '' %>"
           >
+          <small id="email-help" class="form-help">Enter your registered email</small>
         </div>
 
         <div class="form-group">
           <label for="account_password">Password:</label>
-          <input 
-            type="password" 
-            id="account_password" 
-            name="account_password" 
-            required
-          >
+          <div class="password-input-container">
+            <input 
+              type="password" 
+              id="account_password" 
+              name="account_password" 
+              required
+              minlength="12"
+              aria-describedby="password-help"
+              autocomplete="current-password"
+              class="<%= errors && errors.some(e => e.param === 'account_password') ? 'invalid' : '' %>"
+            >
+            <button 
+              type="button" 
+              class="toggle-password" 
+              aria-label="Toggle password visibility"
+              aria-controls="account_password"
+            >
+              👁️
+            </button>
+          </div>
+          <small id="password-help" class="form-help">Enter your password</small>
         </div>
 
-        <button type="submit">Login</button>
+        <div class="form-actions">
+          <button type="submit" class="login-button">Login</button>
+          <p class="register-link">
+            Don't have an account? <a href="/account/register">Register here</a>.
+          </p>
+        </div>
       </form>
-
-      <div class="register-link">
-        <p>Don't have an account? <a href="/account/register">Register here</a>.</p>
-      </div>
     </div>
   </main>
 
+  <script>
+    // Password visibility toggle
+    document.querySelector('.toggle-password')?.addEventListener('click', function() {
+      const passwordInput = document.getElementById('account_password');
+      const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+      passwordInput.setAttribute('type', type);
+      this.textContent = type === 'password' ? '👁️' : '🔒';
+      this.setAttribute('aria-label', 
+        type === 'password' ? 'Show password' : 'Hide password');
+    });
+
+    // Add invalid class to fields with errors on page load
+    document.querySelectorAll('input').forEach(input => {
+      if (!input.checkValidity() && input.value) {
+        input.classList.add('invalid');
+      }
+    });
+  </script>
 </body>
 </html>

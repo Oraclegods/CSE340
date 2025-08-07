@@ -1,17 +1,30 @@
-<%- include('../partials/head', { title: title }) %>
+<%- include('../partials/head', { title: title || 'Register' }) %>
 <body>
-
-  <main class="registration-main">
+  <main class="registration-main" aria-label="Registration form">
     <div class="registration-container">
-      <% if (locals.flashMessage) { %>
-        <div class="flash-message">
-          <%= flashMessage %>
+      <% if (typeof errors !== 'undefined' && errors && errors.length > 0) { %>
+        <div class="error-messages" role="alert">
+          <% errors.forEach(error => { %>
+            <p class="error-text"><%= error.msg %></p>
+          <% }); %>
         </div>
       <% } %>
 
-      <h1><%= title %></h1>
+      <% if (typeof flashMessages !== 'undefined' && flashMessages && flashMessages.error) { %>
+        <div class="flash-message error" role="alert">
+          <%= flashMessages.error %>
+        </div>
+      <% } %>
 
-      <form action="/account/register" method="POST">
+      <% if (typeof flashMessages !== 'undefined' && flashMessages && flashMessages.success) { %>
+        <div class="flash-message success" role="status">
+          <%= flashMessages.success %>
+        </div>
+      <% } %>
+
+      <h1 class="registration-title"><%= title %></h1>
+
+      <form id="registration-form" action="/account/register" method="POST" novalidate>
         <div class="form-group">
           <label for="account_firstname">First name:</label>
           <input 
@@ -19,7 +32,15 @@
             id="account_firstname" 
             name="account_firstname" 
             required
+            minlength="2"
+            maxlength="50"
+            pattern="[A-Za-z\s'-]+"
+            title="Only letters, spaces, hyphens, and apostrophes allowed"
+            value="<%= typeof account_firstname !== 'undefined' ? account_firstname : '' %>"
+            aria-describedby="firstname-help"
+            class="<%= errors && errors.some(e => e.param === 'account_firstname') ? 'invalid' : '' %>"
           >
+          <small id="firstname-help" class="form-help">2-50 characters, letters only</small>
         </div>
 
         <div class="form-group">
@@ -29,7 +50,15 @@
             id="account_lastname" 
             name="account_lastname" 
             required
+            minlength="2"
+            maxlength="50"
+            pattern="[A-Za-z\s'-]+"
+            title="Only letters, spaces, hyphens, and apostrophes allowed"
+            value="<%= typeof account_lastname !== 'undefined' ? account_lastname : '' %>"
+            aria-describedby="lastname-help"
+            class="<%= errors && errors.some(e => e.param === 'account_lastname') ? 'invalid' : '' %>"
           >
+          <small id="lastname-help" class="form-help">2-50 characters, letters only</small>
         </div>
 
         <div class="form-group">
@@ -39,7 +68,12 @@
             id="account_email" 
             name="account_email" 
             required
+            placeholder="example@domain.com"
+            value="<%= typeof account_email !== 'undefined' ? account_email : '' %>"
+            aria-describedby="email-help"
+            class="<%= errors && errors.some(e => e.param === 'account_email') ? 'invalid' : '' %>"
           >
+          <small id="email-help" class="form-help">We'll never share your email</small>
         </div>
 
         <div class="form-group password-group">
@@ -51,32 +85,78 @@
               name="account_password" 
               required
               minlength="12"
+              pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\da-zA-Z]).{12,}$"
+              title="Must contain at least one uppercase, one lowercase, one number and one special character"
+              aria-describedby="password-help password-requirements"
+              autocomplete="new-password"
+              value=""
+              class="<%= errors && errors.some(e => e.param === 'account_password') ? 'invalid' : '' %>"
             >
-            <button type="button" class="toggle-password">👁️</button>
+            <button 
+              type="button" 
+              class="toggle-password" 
+              aria-label="Toggle password visibility"
+              aria-controls="account_password"
+            >
+              👁️
+            </button>
           </div>
-          <div class="password-requirements">
-            <p>Password must:</p>
+          <small id="password-help" class="form-help">Minimum 12 characters</small>
+          <div id="password-requirements" class="password-requirements">
+            <p>Password must contain:</p>
             <ul>
-              <li>Be at least 12 characters</li>
-              <li>Contain 1 capital letter</li>
-              <li>Contain 1 number</li>
-              <li>Contain 1 special character</li>
+              <li class="req-uppercase">At least one uppercase letter (A-Z)</li>
+              <li class="req-lowercase">At least one lowercase letter (a-z)</li>
+              <li class="req-number">At least one number (0-9)</li>
+              <li class="req-special">At least one special character (!@#$%^&*)</li>
             </ul>
           </div>
         </div>
 
-        <button type="submit" class="register-button">Register</button>
+        <div class="form-actions">
+          <button type="submit" class="register-button">Create Account</button>
+          <p class="login-link">
+            Already have an account? <a href="/account/login">Sign in</a>
+          </p>
+        </div>
       </form>
     </div>
   </main>
 
-
   <script>
-    document.querySelector('.toggle-password').addEventListener('click', function() {
-      const passwordInput = document.querySelector('#account_password');
+    // Password visibility toggle
+    document.querySelector('.toggle-password')?.addEventListener('click', function() {
+      const passwordInput = document.getElementById('account_password');
       const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
       passwordInput.setAttribute('type', type);
       this.textContent = type === 'password' ? '👁️' : '🔒';
+      this.setAttribute('aria-label', 
+        type === 'password' ? 'Show password' : 'Hide password');
+    });
+
+    // Real-time password validation feedback
+    document.getElementById('account_password')?.addEventListener('input', function() {
+      const password = this.value;
+      const requirements = {
+        uppercase: /[A-Z]/.test(password),
+        lowercase: /[a-z]/.test(password),
+        number: /\d/.test(password),
+        special: /[^\da-zA-Z]/.test(password)
+      };
+      
+      Object.keys(requirements).forEach(type => {
+        const element = document.querySelector(`.req-${type}`);
+        if (element) {
+          element.classList.toggle('valid', requirements[type]);
+        }
+      });
+    });
+
+    // Add invalid class to fields with errors on page load
+    document.querySelectorAll('input').forEach(input => {
+      if (!input.checkValidity() && input.value) {
+        input.classList.add('invalid');
+      }
     });
   </script>
 </body>

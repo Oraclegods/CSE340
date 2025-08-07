@@ -17,6 +17,7 @@ const inventoryRoute = require("./routes/inventory");
 const env = require("dotenv").config();
 const app = express();
 const static = require("./routes/static");
+const flash = require('connect-flash');
 
 /* ***********************
  * Middleware - PROPER ORDER IS CRITICAL
