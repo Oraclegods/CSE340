@@ -1,0 +1,25 @@
+<%- include('../partials/head', { title: 'Inventory Management' }) %>
+<body>
+  <main class="container management-main">
+    <h1>Inventory Management</h1>
+    
+    <% if (flashMessages && flashMessages.success) { %>
+      <div class="alert alert-success">
+        <%= flashMessages.success %>
+      </div>
+    <% } %>
+    
+    <% if (flashMessages && flashMessages.error) { %>
+      <div class="alert alert-danger">
+        <%= flashMessages.error %>
+      </div>
+    <% } %>
+
+    <div class="management-actions">
+      <a href="/inv/add-classification" class="btn btn-primary">Add New Classification</a>
+      <a href="/inv/add-inventory" class="btn btn-primary">Add New Inventory</a>
+    </div>
+  </main>
+
+</body>
+</html>

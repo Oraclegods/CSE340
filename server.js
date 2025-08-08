@@ -67,6 +67,9 @@ app.use("/inventory", inventoryRoute);
 // Account routes (now body parsing will work)
 app.use('/account', require('./routes/accountRoute'));
 
+// management routes (usually near other app.use() calls)
+app.use('/inv', require('./routes/inventory'));
+
 /* ***********************
  * Error Handling - LAST MIDDLEWARE
  *************************/

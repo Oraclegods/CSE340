@@ -71,10 +71,130 @@ async function buildByClassification(req, res, next) {
   }
 }
 
+
+/* ****************************************
+// build management controller...................
+* **************************************** */
+
+async function buildManagement(req, res, next) {
+  let nav = await utilities.getNav();
+  res.render('inventory/management', {
+    title: 'Inventory Management',
+    nav,
+    flashMessages: {
+      success: req.flash('success'),
+      error: req.flash('error')
+    }
+  });
+}
+
+/* ****************************************
+// build add classification controller...................
+* **************************************** */
+async function buildAddClassification(req, res, next) {
+  let nav = await utilities.getNav();
+  res.render('inventory/add-classification', {
+    title: 'Add Classification',
+    nav,
+    errors: null,
+    flashMessages: {
+      error: req.flash('error')
+    }
+  });
+}
+
+async function addClassification(req, res, next) {
+  const { classification_name } = req.body;
+  
+  try {
+    const result = await invModel.addClassification(classification_name);
+    if (result.rowCount > 0) {
+      req.flash('success', 'Classification added successfully');
+      res.redirect('/inv');
+    } else {
+      req.flash('error', 'Failed to add classification');
+      res.redirect('/inv/add-classification');
+    }
+  } catch (error) {
+    req.flash('error', 'Error adding classification');
+    res.redirect('/inv/add-classification');
+  }
+}
+
+
+/* ****************************************
+*   add/build inventory Controllers
+* **************************************** */
+
+async function buildAddInventory(req, res, next) {
+  let nav = await utilities.getNav();
+  let classificationList = await utilities.buildClassificationList();
+  res.render('inventory/add-inventory', {
+    title: 'Add Inventory',
+    nav,
+    classificationList,
+    errors: null,
+    flashMessages: {
+      error: req.flash('error')
+    }
+  });
+}
+
+async function addInventory(req, res, next) {
+  const { 
+    classification_id, 
+    inv_make, 
+    inv_model,
+    inv_year,
+    inv_description,
+    inv_image,
+    inv_thumbnail,
+    inv_price,
+    inv_miles,
+    inv_color
+    // Add other fields
+  } = req.body;
+  
+  try {
+    const result = await invModel.addInventory({
+      classification_id,
+      inv_make,
+      inv_model,
+      inv_year,
+      inv_description,
+      inv_image,
+      inv_thumbnail,
+      inv_price,
+      inv_miles,
+      inv_color
+      // Add other fields
+    });
+    
+    if (result.rowCount > 0) {
+      req.flash('success', 'Inventory added successfully');
+      res.redirect('/inv');
+    } else {
+      req.flash('error', 'Failed to add inventory');
+      res.redirect('/inv/add-inventory');
+    }
+  } catch (error) {
+    console.error('Error adding inventory:', error);
+    req.flash('error', 'Error adding inventory');
+    res.redirect('/inv/add-inventory');
+  }
+}
+
+
+
 /* ****************************************
 * Export Controllers
 * **************************************** */
 module.exports = { 
   buildVehicleDetail,
-  buildByClassification 
+  buildByClassification,
+  buildManagement,
+  buildAddClassification,
+  addClassification,
+  buildAddInventory,
+  addInventory 
 };

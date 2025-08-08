@@ -1,18 +1,38 @@
 const express = require("express");
 const router = express.Router();
-const utilities = require("../utilities"); // Import the entire utilities object
-const inventoryController = require("../controllers/inventoryController");
+const utilities = require("../utilities");
+const invController = require("../controllers/inventoryController");
+
+// Import validations separately
+const classificationValidate = require("../utilities/classification-validation");
+const inventoryValidate = require("../utilities/inventory-validation");
 
 // Test route
-router.get('/test', (req, res) => {
-  res.send("Inventory router is working!");
-});
+router.get('/test', (req, res) => res.send("Inventory routes working!"));
 
-// I ADDed this new classification route
-router.get("/classification/:classification", 
-  utilities.handleErrors(inventoryController.buildByClassification));
+// Management view
+router.get('/', utilities.handleErrors(invController.buildManagement));
 
-// Vehicle detail route - using handleErrors from utilities
-router.get("/:inv_id", utilities.handleErrors(inventoryController.buildVehicleDetail));
+// Add classification routes
+router.get('/add-classification', utilities.handleErrors(invController.buildAddClassification));
+router.post('/add-classification',
+  classificationValidate.classificationRules(),
+  classificationValidate.checkClassificationData,
+  utilities.handleErrors(invController.addClassification)
+);
+
+// Add inventory routes
+router.get('/add-inventory', utilities.handleErrors(invController.buildAddInventory));
+router.post('/add-inventory',
+  inventoryValidate.inventoryRules(),
+  inventoryValidate.checkInventoryData,
+  utilities.handleErrors(invController.addInventory)
+);
+
+// Classification view
+router.get("/classification/:classification", utilities.handleErrors(invController.buildByClassification));
+
+// Vehicle detail (MUST BE LAST)
+router.get("/:inv_id", utilities.handleErrors(invController.buildVehicleDetail));
 
 module.exports = router;
