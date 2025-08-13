@@ -35,4 +35,10 @@ router.get("/classification/:classification", utilities.handleErrors(invControll
 // Vehicle detail (MUST BE LAST)
 router.get("/:inv_id", utilities.handleErrors(invController.buildVehicleDetail));
 
+
+router.post('/add-classification', async (req, res) => {
+  await db.query("INSERT INTO classification (name) VALUES (?)", [req.body.name]);
+  res.redirect("/"); // Reloads the page, navbar updates
+});
+
 module.exports = router;

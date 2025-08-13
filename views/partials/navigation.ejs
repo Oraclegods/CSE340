@@ -1,10 +1,12 @@
-<nav>
-    <ul>
-        <li><a href="/" class="nav-link">Home</a></li>
-        <li><a href="/inventory/classification/custom" class="nav-link">Custom</a></li>
-        <li><a href="/inventory/classification/sport"class="nav-link">Sports</a></li>
-        <li><a href="/inventory/classification/sedan" class="nav-link">Sedans</a></li>
-        <li><a href="/inventory/classification/suv" class="nav-link">SUVs</a></li>
-        <li><a href="/inventory/classification/truck" class="nav-link">Trucks</a></li>
-    </ul>
+<nav class="main-nav">
+  <ul class="nav-carousel">
+    <li><a href="/" class="nav-link">Home</a></li>
+    <% nav.forEach(classification => { %>
+      <li>
+        <a href="/inventory/classification/<%= classification.classification_name %>">
+          <%= classification.classification_name %>
+        </a>
+      </li>
+    <% }) %>
+  </ul>
 </nav>

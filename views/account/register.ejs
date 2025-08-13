@@ -1,163 +1,161 @@
-<%- include('../partials/head', { title: title || 'Register' }) %>
-<body>
-  <main class="registration-main" aria-label="Registration form">
-    <div class="registration-container">
-      <% if (typeof errors !== 'undefined' && errors && errors.length > 0) { %>
-        <div class="error-messages" role="alert">
-          <% errors.forEach(error => { %>
-            <p class="error-text"><%= error.msg %></p>
-          <% }); %>
-        </div>
-      <% } %>
+<section class="registration-main" aria-label="Registration form">
 
-      <% if (typeof flashMessages !== 'undefined' && flashMessages && flashMessages.error) { %>
-        <div class="flash-message error" role="alert">
-          <%= flashMessages.error %>
-        </div>
-      <% } %>
+  <div class="registration-container">
+    <% if (typeof errors !== 'undefined' && errors && errors.length > 0) { %>
+      <div class="error-messages" role="alert">
+        <% errors.forEach(error => { %>
+          <p class="error-text"><%= error.msg %></p>
+        <% }); %>
+      </div>
+    <% } %>
 
-      <% if (typeof flashMessages !== 'undefined' && flashMessages && flashMessages.success) { %>
-        <div class="flash-message success" role="status">
-          <%= flashMessages.success %>
-        </div>
-      <% } %>
+    <% if (typeof flashMessages !== 'undefined' && flashMessages && flashMessages.error) { %>
+      <div class="flash-message error" role="alert">
+        <%= flashMessages.error %>
+      </div>
+    <% } %>
 
-      <h1 class="registration-title"><%= title %></h1>
+    <% if (typeof flashMessages !== 'undefined' && flashMessages && flashMessages.success) { %>
+      <div class="flash-message success" role="status">
+        <%= flashMessages.success %>
+      </div>
+    <% } %>
 
-      <form id="registration-form" action="/account/register" method="POST" novalidate>
-        <div class="form-group">
-          <label for="account_firstname">First name:</label>
+    <h2 class="registration-title"><%= title %></h2>
+
+
+    <form id="registration-form" action="/account/register" method="POST" novalidate>
+      <div class="form-group">
+        <label for="account_firstname">First name:</label>
+        <input 
+          type="text" 
+          id="account_firstname" 
+          name="account_firstname" 
+          required
+          minlength="2"
+          maxlength="50"
+          pattern="[A-Za-z\s'-]+"
+          title="Only letters, spaces, hyphens, and apostrophes allowed"
+          value="<%= typeof account_firstname !== 'undefined' ? account_firstname : '' %>"
+          aria-describedby="firstname-help"
+          class="<%= errors && errors.some(e => e.param === 'account_firstname') ? 'invalid' : '' %>"
+        >
+        <small id="firstname-help" class="form-help">2-50 characters, letters only</small>
+      </div>
+
+      <div class="form-group">
+        <label for="account_lastname">Last name:</label>
+        <input 
+          type="text" 
+          id="account_lastname" 
+          name="account_lastname" 
+          required
+          minlength="2"
+          maxlength="50"
+          pattern="[A-Za-z\s'-]+"
+          title="Only letters, spaces, hyphens, and apostrophes allowed"
+          value="<%= typeof account_lastname !== 'undefined' ? account_lastname : '' %>"
+          aria-describedby="lastname-help"
+          class="<%= errors && errors.some(e => e.param === 'account_lastname') ? 'invalid' : '' %>"
+        >
+        <small id="lastname-help" class="form-help">2-50 characters, letters only</small>
+      </div>
+
+      <div class="form-group">
+        <label for="account_email">Email address:</label>
+        <input 
+          type="email" 
+          id="account_email" 
+          name="account_email" 
+          required
+          placeholder="example@domain.com"
+          value="<%= typeof account_email !== 'undefined' ? account_email : '' %>"
+          aria-describedby="email-help"
+          class="<%= errors && errors.some(e => e.param === 'account_email') ? 'invalid' : '' %>"
+        >
+        <small id="email-help" class="form-help">We'll never share your email</small>
+      </div>
+
+      <div class="form-group password-group">
+        <label for="account_password">Password:</label>
+        <div class="password-input-container">
           <input 
-            type="text" 
-            id="account_firstname" 
-            name="account_firstname" 
+            type="password" 
+            id="account_password" 
+            name="account_password" 
             required
-            minlength="2"
-            maxlength="50"
-            pattern="[A-Za-z\s'-]+"
-            title="Only letters, spaces, hyphens, and apostrophes allowed"
-            value="<%= typeof account_firstname !== 'undefined' ? account_firstname : '' %>"
-            aria-describedby="firstname-help"
-            class="<%= errors && errors.some(e => e.param === 'account_firstname') ? 'invalid' : '' %>"
+            minlength="12"
+            pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\da-zA-Z]).{12,}$"
+            title="Must contain at least one uppercase, one lowercase, one number and one special character"
+            aria-describedby="password-help password-requirements"
+            autocomplete="new-password"
+            value=""
+            class="<%= errors && errors.some(e => e.param === 'account_password') ? 'invalid' : '' %>"
           >
-          <small id="firstname-help" class="form-help">2-50 characters, letters only</small>
-        </div>
-
-        <div class="form-group">
-          <label for="account_lastname">Last name:</label>
-          <input 
-            type="text" 
-            id="account_lastname" 
-            name="account_lastname" 
-            required
-            minlength="2"
-            maxlength="50"
-            pattern="[A-Za-z\s'-]+"
-            title="Only letters, spaces, hyphens, and apostrophes allowed"
-            value="<%= typeof account_lastname !== 'undefined' ? account_lastname : '' %>"
-            aria-describedby="lastname-help"
-            class="<%= errors && errors.some(e => e.param === 'account_lastname') ? 'invalid' : '' %>"
+          <button 
+            type="button" 
+            class="toggle-password" 
+            aria-label="Toggle password visibility"
+            aria-controls="account_password"
           >
-          <small id="lastname-help" class="form-help">2-50 characters, letters only</small>
+            👁️
+          </button>
         </div>
-
-        <div class="form-group">
-          <label for="account_email">Email address:</label>
-          <input 
-            type="email" 
-            id="account_email" 
-            name="account_email" 
-            required
-            placeholder="example@domain.com"
-            value="<%= typeof account_email !== 'undefined' ? account_email : '' %>"
-            aria-describedby="email-help"
-            class="<%= errors && errors.some(e => e.param === 'account_email') ? 'invalid' : '' %>"
-          >
-          <small id="email-help" class="form-help">We'll never share your email</small>
+        <small id="password-help" class="form-help">Minimum 12 characters</small>
+        <div id="password-requirements" class="password-requirements">
+          <p>Password must contain:</p>
+          <ul>
+            <li class="req-uppercase">At least one uppercase letter (A-Z)</li>
+            <li class="req-lowercase">At least one lowercase letter (a-z)</li>
+            <li class="req-number">At least one number (0-9)</li>
+            <li class="req-special">At least one special character (!@#$%^&*)</li>
+          </ul>
         </div>
+      </div>
 
-        <div class="form-group password-group">
-          <label for="account_password">Password:</label>
-          <div class="password-input-container">
-            <input 
-              type="password" 
-              id="account_password" 
-              name="account_password" 
-              required
-              minlength="12"
-              pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\da-zA-Z]).{12,}$"
-              title="Must contain at least one uppercase, one lowercase, one number and one special character"
-              aria-describedby="password-help password-requirements"
-              autocomplete="new-password"
-              value=""
-              class="<%= errors && errors.some(e => e.param === 'account_password') ? 'invalid' : '' %>"
-            >
-            <button 
-              type="button" 
-              class="toggle-password" 
-              aria-label="Toggle password visibility"
-              aria-controls="account_password"
-            >
-              👁️
-            </button>
-          </div>
-          <small id="password-help" class="form-help">Minimum 12 characters</small>
-          <div id="password-requirements" class="password-requirements">
-            <p>Password must contain:</p>
-            <ul>
-              <li class="req-uppercase">At least one uppercase letter (A-Z)</li>
-              <li class="req-lowercase">At least one lowercase letter (a-z)</li>
-              <li class="req-number">At least one number (0-9)</li>
-              <li class="req-special">At least one special character (!@#$%^&*)</li>
-            </ul>
-          </div>
-        </div>
+      <div class="form-actions">
+        <button type="submit" class="register-button">Create Account</button>
+        <p class="login-link">
+          Already have an account? <a href="/account/login">Sign in</a>
+        </p>
+      </div>
+    </form>
+  </div>
+</section>
 
-        <div class="form-actions">
-          <button type="submit" class="register-button">Create Account</button>
-          <p class="login-link">
-            Already have an account? <a href="/account/login">Sign in</a>
-          </p>
-        </div>
-      </form>
-    </div>
-  </main>
+<script>
+  // Password visibility toggle
+  document.querySelector('.toggle-password')?.addEventListener('click', function() {
+    const passwordInput = document.getElementById('account_password');
+    const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+    passwordInput.setAttribute('type', type);
+    this.textContent = type === 'password' ? '👁️' : '🔒';
+    this.setAttribute('aria-label', 
+      type === 'password' ? 'Show password' : 'Hide password');
+  });
 
-  <script>
-    // Password visibility toggle
-    document.querySelector('.toggle-password')?.addEventListener('click', function() {
-      const passwordInput = document.getElementById('account_password');
-      const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
-      passwordInput.setAttribute('type', type);
-      this.textContent = type === 'password' ? '👁️' : '🔒';
-      this.setAttribute('aria-label', 
-        type === 'password' ? 'Show password' : 'Hide password');
-    });
-
-    // Real-time password validation feedback
-    document.getElementById('account_password')?.addEventListener('input', function() {
-      const password = this.value;
-      const requirements = {
-        uppercase: /[A-Z]/.test(password),
-        lowercase: /[a-z]/.test(password),
-        number: /\d/.test(password),
-        special: /[^\da-zA-Z]/.test(password)
-      };
-      
-      Object.keys(requirements).forEach(type => {
-        const element = document.querySelector(`.req-${type}`);
-        if (element) {
-          element.classList.toggle('valid', requirements[type]);
-        }
-      });
-    });
-
-    // Add invalid class to fields with errors on page load
-    document.querySelectorAll('input').forEach(input => {
-      if (!input.checkValidity() && input.value) {
-        input.classList.add('invalid');
+  // Real-time password validation feedback
+  document.getElementById('account_password')?.addEventListener('input', function() {
+    const password = this.value;
+    const requirements = {
+      uppercase: /[A-Z]/.test(password),
+      lowercase: /[a-z]/.test(password),
+      number: /\d/.test(password),
+      special: /[^\da-zA-Z]/.test(password)
+    };
+    
+    Object.keys(requirements).forEach(type => {
+      const element = document.querySelector(`.req-${type}`);
+      if (element) {
+        element.classList.toggle('valid', requirements[type]);
       }
     });
-  </script>
-</body>
-</html>
+  });
+
+  // Add invalid class to fields with errors on page load
+  document.querySelectorAll('input').forEach(input => {
+    if (!input.checkValidity() && input.value) {
+      input.classList.add('invalid');
+    }
+  });
+</script>

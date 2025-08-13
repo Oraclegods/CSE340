@@ -1,43 +1,37 @@
-<%- include('../partials/head', { title: 'Add Classification' }) %>
-<body>
+<h1>Add New Classification</h1>
 
-  <main class="container">
-    <h1>Add New Classification</h1>
-    
-    <% if (errors && errors.length > 0) { %>
-      <div class="alert alert-danger">
-        <ul>
-          <% errors.forEach(error => { %>
-            <li><%= error.msg %></li>
-          <% }); %>
-        </ul>
-      </div>
-    <% } %>
-    
-    <% if (flashMessages && flashMessages.error) { %>
-      <div class="alert alert-danger">
-        <%= flashMessages.error %>
-      </div>
-    <% } %>
+<% if (errors && errors.length > 0) { %>
+  <div class="alert alert-danger">
+    <ul>
+      <% errors.forEach(error => { %>
+        <li><%= error.msg %></li>
+      <% }); %>
+    </ul>
+  </div>
+<% } %>
 
-    <form action="/inv/add-classification" method="POST">
-      <div class="form-group">
-        <label for="classification_name">Classification Name</label>
-        <input type="text" 
-               id="classification_name" 
-               name="classification_name" 
-               class="form-control <%= errors && errors.some(e => e.param === 'classification_name') ? 'is-invalid' : '' %>"
-               pattern="^[a-zA-Z0-9]+$"
-               title="No spaces or special characters allowed"
-               required>
-        <div class="invalid-feedback">
-          Classification name must contain only letters and numbers
-        </div>
-      </div>
-      
-      <button type="submit" class="btn btn-primary">Add Classification</button>
-    </form>
-  </main>
- 
-</body>
-</html>
+<% if (flashMessages && flashMessages.error) { %>
+  <div class="alert alert-danger">
+    <%= flashMessages.error %>
+  </div>
+<% } %>
+
+<form action="/inv/add-classification" method="POST">
+  <div class="form-group">
+    <label for="classification_name">Classification Name</label>
+    <input
+      type="text"
+      id="classification_name"
+      name="classification_name"
+      class="form-control <%= errors && errors.some(e => e.param === 'classification_name') ? 'is-invalid' : '' %>"
+      pattern="^[a-zA-Z0-9]+$"
+      title="No spaces or special characters allowed"
+      required
+    />
+    <div class="invalid-feedback">
+      Classification name must contain only letters and numbers
+    </div>
+  </div>
+
+  <button type="submit" class="btn btn-primary">Add Classification</button>
+</form>

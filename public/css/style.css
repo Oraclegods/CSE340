@@ -73,6 +73,10 @@ nav a.active::after {
     background: #d9534f; /* Matching your accent color */
 }
 
+/* Mobile nav hidden by default................................................................................. */
+/* Carousel nav for mobile */
+
+
 /* ===== HEADER & NAVIGATION ===== */
 .main-header {
     background: black;

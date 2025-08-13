@@ -51,6 +51,16 @@ app.set("view engine", "ejs");
 app.use(expressLayouts);
 app.set("layout", "./layouts/layout");
 
+app.use(async (req, res, next) => {
+  try {
+    res.locals.nav = await utilities.getNav();
+    next();
+  } catch (err) {
+    next(err);
+  }
+});
+
+
 /* ***********************
  * Routes - MOUNTED AFTER ALL MIDDLEWARE
  *************************/
