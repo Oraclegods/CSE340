@@ -1,19 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<%- include('../partials/head') %>
-
-<body>
-    <div id="wrapper">
-
-        <main>
-            <h1><%= title %></h1>
-            <p><%- message %></p>
-
-            <img src="/images/sad-car.png" alt="Sad car" style="max-width: 300px;">
-            <p>Looks like our engine stalled! 🛠️ Try heading back to <a href="/">home</a>.</p>
-        </main>
-
-        <%- include('../partials/footer') %>
-    </div>
-</body>
-</html>
+<main>
+        <h1><%= title %></h1>
+        <p class="error-message"><%= message %></p>
+</main>

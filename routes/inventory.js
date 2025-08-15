@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const utilities = require("../utilities");
 const invController = require("../controllers/inventoryController");
+const { checkAccess } = require('../middleware/authMiddleware');
 
 // Import validations separately
 const classificationValidate = require("../utilities/classification-validation");
@@ -40,5 +41,9 @@ router.post('/add-classification', async (req, res) => {
   await db.query("INSERT INTO classification (name) VALUES (?)", [req.body.name]);
   res.redirect("/"); // Reloads the page, navbar updates
 });
+
+// checking access route
+router.get('/add-classification', checkAccess, invController.buildAddClassification);
+router.get('/add-inventory', checkAccess, invController.buildAddInventory);
 
 module.exports = router;

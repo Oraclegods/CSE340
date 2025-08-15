@@ -107,10 +107,42 @@ Util.checkJWTToken = (req, res, next) => {
  }
 
 
+/* ****************************************
+ * Password Validation Utility
+ * *************************************** */
+function checkPassword(password) {
+  const errors = [];
+  
+  if (!password) {
+    errors.push("Password is required");
+    return errors;
+  }
+
+  if (password.length < 8) {
+    errors.push("Password must be at least 8 characters");
+  }
+
+  if (!/\d/.test(password)) {
+    errors.push("Password must contain at least one number");
+  }
+
+  if (!/[A-Z]/.test(password)) {
+    errors.push("Password must contain at least one uppercase letter");
+  }
+
+  if (!/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
+    errors.push("Password must contain at least one special character");
+  }
+
+  return errors;
+}
+
+
 // Export all utilities
 module.exports = {
   getNav,
   handleErrors,
   buildClassificationList,
-  Util
+  Util,
+  checkPassword
 };

@@ -47,6 +47,11 @@ router.post(
   utilities.handleErrors(accountController.accountRegister)
 );
 
+// new routes for account update, and passward update
+router.get('/update/:accountId', accountController.buildUpdate);
+router.post('/update', accountController.updateAccount);
+router.post('/update-password', accountController.updatePassword);
+router.get('/logout', accountController.logout);
 
 
 module.exports = router;

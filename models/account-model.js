@@ -40,5 +40,45 @@ async function getAccountByEmail (account_email) {
 }
 
 
+// new models for account updates and passwards
 
-module.exports = { accountRegister, checkExistingEmail, getAccountByEmail };
+async function getAccountById(accountId) {
+  try {
+    const sql = "SELECT * FROM account WHERE account_id = $1";
+    const data = await pool.query(sql, [accountId]);
+    return data.rows[0];
+  } catch (error) {
+    throw error;
+  }
+}
+
+async function updateAccount(accountId, firstName, lastName, email) {
+  try {
+    const sql = "UPDATE account SET account_firstname = $1, account_lastname = $2, account_email = $3 WHERE account_id = $4 RETURNING *";
+    const data = await pool.query(sql, [firstName, lastName, email, accountId]);
+    return data.rows[0];
+  } catch (error) {
+    throw error;
+  }
+}
+
+async function updatePassword(accountId, password) {
+  try {
+    const sql = "UPDATE account SET account_password = $1 WHERE account_id = $2 RETURNING *";
+    const data = await pool.query(sql, [password, accountId]);
+    return data.rows[0];
+  } catch (error) {
+    throw error;
+  }
+}
+
+
+
+module.exports = { 
+  accountRegister, 
+  checkExistingEmail, 
+  getAccountByEmail,
+  getAccountById,
+  updateAccount,
+  updatePassword
+};

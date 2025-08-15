@@ -20,6 +20,7 @@ const errorHandler = require("./middleware/errorHandler");
 const static = require("./routes/static");
 const inventoryRoute = require("./routes/inventory");
 const accountRoute = require("./routes/accountRoute");
+const { checkJWTToken } = require('./middleware/authMiddleware');
 
 const app = express();
 
@@ -70,9 +71,20 @@ app.use(async (req, res, next) => {
   }
 });
 
+// session middleware 
+
+app.use((req, res, next) => {
+  res.locals.loggedin = req.session?.loggedin || false;
+  res.locals.accountData = req.session?.accountData || null;
+  next();
+});
+
 //JWT middleware
 // app.use(utilities.checkJWTToken)
 app.use((req, res, next) => utilities.Util.checkJWTToken(req, res, next));
+
+// jwt middleware for auth
+app.use(checkJWTToken);
 
 /* ***********************
  * Routes - MOUNTED AFTER ALL MIDDLEWARE

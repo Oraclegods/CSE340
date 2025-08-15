@@ -268,12 +268,12 @@ async function addInventory(req, res, next) {
   }
 
   // Optionally ensure images/thumbnail not empty (adjust if they are optional)
-  if (!formData.inv_image || !String(formData.inv_image).trim()) {
+  /* if (!formData.inv_image || !String(formData.inv_image).trim()) {
     errors.push({ msg: 'Image path is required.', param: 'inv_image' });
   }
   if (!formData.inv_thumbnail || !String(formData.inv_thumbnail).trim()) {
     errors.push({ msg: 'Thumbnail path is required.', param: 'inv_thumbnail' });
-  }
+  }  */
 
   // If there are validation errors -> re-render with sticky form data
   if (errors.length > 0) {
