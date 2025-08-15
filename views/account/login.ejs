@@ -1,24 +1,29 @@
 <div class="login-main" role="region" aria-label="Login form">
   <div class="login-container">
-    <% if (errors && errors.length > 0) { %>
+    <!-- Flash Messages Display -->
+    <% if (messages && messages.error) { %>
       <div class="error-messages" role="alert">
-        <% errors.forEach(error => { %>
-          <p class="error-text"><%= error.msg %></p>
-        <% }); %>
+        <% if (Array.isArray(messages.error)) { %>
+          <% messages.error.forEach(msg => { %>
+            <p class="error-text"><%= msg %></p>
+          <% }); %>
+        <% } else { %>
+          <p class="error-text"><%= messages.error %></p>
+        <% } %>
       </div>
     <% } %>
 
-    <% if (flashMessages && flashMessages.error) { %>
-      <div class="flash-message error" role="alert">
-        <%= flashMessages.error %>
-      </div>
-    <% } %>
-
-    <% if (flashMessages && flashMessages.success) { %>
+    <% if (messages && messages.success) { %>
       <div class="flash-message success" role="status">
-        <%= flashMessages.success %>
+        <%= messages.success %>
       </div>
     <% } %>
+
+    <% if (messages && messages.notice) { %>
+      <div class="notice-message" role="alert">
+        <%= messages.notice %>
+      </div>
+   <% } %>
 
     <h1 class="login-title">Login</h1>
 
@@ -33,7 +38,7 @@
           placeholder="example@domain.com"
           value="<%= typeof account_email !== 'undefined' ? account_email : '' %>"
           aria-describedby="email-help"
-          class="<%= errors && errors.some(e => e.param === 'account_email') ? 'invalid' : '' %>"
+          class="<%= messages.error ? 'invalid' : '' %>"
         >
         <small id="email-help" class="form-help">Enter your registered email</small>
       </div>
@@ -49,7 +54,7 @@
             minlength="12"
             aria-describedby="password-help"
             autocomplete="current-password"
-            class="<%= errors && errors.some(e => e.param === 'account_password') ? 'invalid' : '' %>"
+            class="<%= messages.error ? 'invalid' : '' %>"
           >
           <button 
             type="button" 
@@ -85,9 +90,12 @@
   });
 
   // Add invalid class to fields with errors on page load
-  document.querySelectorAll('input').forEach(input => {
-    if (!input.checkValidity() && input.value) {
-      input.classList.add('invalid');
+  document.addEventListener('DOMContentLoaded', function() {
+    const errorExists = document.querySelector('.error-messages');
+    if (errorExists) {
+      document.querySelectorAll('input').forEach(input => {
+        input.classList.add('invalid');
+      });
     }
   });
 </script>

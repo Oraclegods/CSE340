@@ -6,53 +6,63 @@
 /* ***********************
  * Require Statements
  *************************/
+const express = require("express");
+const expressLayouts = require("express-ejs-layouts");
 const session = require("express-session");
 const pool = require('./database/');
-const expressLayouts = require("express-ejs-layouts");
-const express = require("express");
+const connectPgSimple = require('connect-pg-simple');
+const flash = require('connect-flash');
+const cookieParser = require("cookie-parser");
+const env = require("dotenv").config();
 const utilities = require("./utilities");
 const baseController = require("./controllers/baseController");
 const errorHandler = require("./middleware/errorHandler");
-const inventoryRoute = require("./routes/inventory");
-const env = require("dotenv").config();
-const app = express();
 const static = require("./routes/static");
-const flash = require('connect-flash');
+const inventoryRoute = require("./routes/inventory");
+const accountRoute = require("./routes/accountRoute");
+
+const app = express();
 
 /* ***********************
  * Middleware - PROPER ORDER IS CRITICAL
  *************************/
 
-// 1. Session middleware (required for flash messages)
+// 1. Cookie parser (should be first)
+app.use(cookieParser());
+
+// 2. Session middleware (required for flash messages)
+const pgSession = connectPgSimple(session);
 app.use(session({
-  store: new (require('connect-pg-simple')(session))({
+  store: new pgSession({
     createTableIfMissing: true,
     pool,
   }),
   secret: process.env.SESSION_SECRET,
-  resave: true,
-  saveUninitialized: true,
+  resave: false, // Changed to false for better performance
+  saveUninitialized: false, // Changed to false for GDPR compliance
   name: 'sessionId',
+  cookie: {
+    secure: process.env.NODE_ENV === 'production',
+    maxAge: 3600000 // 1 hour
+  }
 }));
 
-// 2. Flash messages (requires session)
-app.use(require('connect-flash')());
-app.use(function(req, res, next){
-  res.locals.messages = require('express-messages')(req, res);
-  next();
-});
+// 3. Flash messages (requires session)
+app.use(flash());
 
-// 3. Body parsers (MUST come before routes)
+// 4. Body parsers (MUST come before routes)
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// 4. View engine setup
+// 5. View engine setup
 app.set("view engine", "ejs");
 app.use(expressLayouts);
 app.set("layout", "./layouts/layout");
 
+// 6. Custom middleware for nav data
 app.use(async (req, res, next) => {
   try {
+    res.locals.messages = req.flash(); // Makes flash messages available in all views
     res.locals.nav = await utilities.getNav();
     next();
   } catch (err) {
@@ -60,6 +70,9 @@ app.use(async (req, res, next) => {
   }
 });
 
+//JWT middleware
+// app.use(utilities.checkJWTToken)
+app.use((req, res, next) => utilities.Util.checkJWTToken(req, res, next));
 
 /* ***********************
  * Routes - MOUNTED AFTER ALL MIDDLEWARE
@@ -72,13 +85,11 @@ app.use(static);
 app.get("/", utilities.handleErrors(baseController.buildHome));
 
 // Inventory routes
-app.use("/inventory", inventoryRoute);
+app.use("/inv", inventoryRoute); // Consolidated to single inventory route
 
-// Account routes (now body parsing will work)
-app.use('/account', require('./routes/accountRoute'));
-
-// management routes (usually near other app.use() calls)
-app.use('/inv', require('./routes/inventory'));
+// Account routes
+app.use('/account', accountRoute);
+//app.use('/account', require('./routes/accountRoute'));
 
 /* ***********************
  * Error Handling - LAST MIDDLEWARE
@@ -89,27 +100,27 @@ app.use(async (req, res, next) => {
   next({status: 404, message: 'Sorry, we appear to have lost that page.'});
 });
 
-// Error handler
+// Main error handler
 app.use(async (err, req, res, next) => {
   let nav = await utilities.getNav();
   console.error(`Error at: "${req.originalUrl}": ${err.message}`);
   const message = err.status == 404 ? err.message : 'Oh no! There was a crash. Maybe try a different route?';
-  res.render("errors/error", {
+  res.status(err.status || 500).render("errors/error", {
     title: err.status || 'Server Error',
     message,
     nav
   });
 });
 
-// Custom error handler middleware
+// Custom error handler middleware (if you have specific error handling logic)
 app.use(errorHandler);
 
 /* ***********************
  * Server Startup
  *************************/
-const port = process.env.PORT;
-const host = process.env.HOST;
+const port = process.env.PORT || 5500; // Added fallback port
+const host = process.env.HOST || 'localhost'; // Added fallback host
 
 app.listen(port, () => {
-  console.log(`app listening on ${host}:${port}`);
+  console.log(`Server running on http://${host}:${port}`);
 });

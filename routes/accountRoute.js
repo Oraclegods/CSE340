@@ -3,6 +3,7 @@ const router = express.Router();
 const utilities = require('../utilities');
 const accountController = require('../controllers/accountController');
 const validate = require('../utilities/account-validation');
+const { Util } = require('../utilities');
 
 /* ****************************************
 *  ROOT ACCOUNT ROUTE (REDIRECT TO LOGIN)
@@ -23,6 +24,17 @@ router.post(
   utilities.handleErrors(accountController.accountLogin)
 );
 
+// account management new route
+//router.get('/accountManagement', accountController.accountManagement);
+router.get("/accountManagement", Util.checkLogin, utilities.handleErrors(accountController.accountManagement))
+
+// Test route
+router.get('/test-flash', (req, res) => {
+  req.flash('notice', 'This is a test message');
+  res.redirect('/account/login');
+});
+
+
 /* ****************************************
 *  REGISTRATION ROUTES
 * **************************************** */
@@ -34,5 +46,7 @@ router.post(
   validate.checkRegData,
   utilities.handleErrors(accountController.accountRegister)
 );
+
+
 
 module.exports = router;

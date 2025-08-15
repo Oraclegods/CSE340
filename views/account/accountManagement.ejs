@@ -1,0 +1,20 @@
+
+    <main class="container">
+        <!-- Flash messages display -->
+        <% if (messages.error) { %>
+            <div class="alert alert-danger">
+                <%= messages.error %>
+            </div>
+        <% } %>
+        <% if (messages.success) { %>
+            <div class="alert alert-success">
+                <%= messages.success %>
+            </div>
+        <% } %>
+
+        <!-- Main content -->
+        <h1>Account Management</h1>
+        <p>You're logged in</p>
+        
+        <!-- You can add more account management features here later -->
+    </main>
