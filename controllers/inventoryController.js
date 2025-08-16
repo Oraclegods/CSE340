@@ -2,6 +2,7 @@
 
 const invModel = require('../models/inventory-model');
 const utilities = require('../utilities');
+const invCont = {}; 
 
 /* ****************************************
  * Existing Vehicle Detail Function (unchanged name)
@@ -86,9 +87,16 @@ async function buildByClassification(req, res, next) {
 async function buildManagement(req, res, next) {
   try {
     const nav = await utilities.getNav();
+    const classifications = await utilities.getClassifications();
+
+    console.log("DEBUG - Classifications from DB:", classifications);
+
     res.render('inventory/management', {
       title: 'Inventory Management',
       nav,
+      accountData: res.locals.accountData,
+      classificationList: classifications, 
+      // classificationSelect,
       flashMessages: {
         success: req.flash('success'),
         error: req.flash('error')
@@ -332,6 +340,96 @@ async function addInventory(req, res, next) {
   }
 }
 
+/* ***************************
+ *  Return Inventory by Classification As JSON
+ * ************************** */
+async function getInventoryJSON(req, res, next) {
+  try {
+    const classification_id = parseInt(req.params.classification_id);
+    console.log("Fetching inventory for classification:", classification_id);
+
+    const invData = await invModel.getInventoryByClassificationId(classification_id);
+     console.log("Inventory data:", invData); // Should show array of vehicles
+    
+    if (!invData || invData.length === 0) {
+      return res.status(404).json({ message: "No inventory found" });
+    }
+     console.log("No inventory found for classification:", classification_id);
+
+    return res.json(invData);
+    
+  } catch (error) {
+    console.error("getInventoryJSON error:", error);
+    next(error);
+  }
+}
+
+
+
+/* ****************************************
+*  Build Edit Inventory View
+* *************************************** */
+async function buildEditInventory(req, res, next) {
+  try {
+    const invId = parseInt(req.params.inv_id)
+    const inventoryItem = await invModel.getInventoryById(invId)
+
+    if (!inventoryItem) {
+      console.error(`No inventory found with ID: ${invId}`)
+      return res.status(404).send("Inventory not found")
+    }
+
+    // Get classifications with error handling
+    let classifications = []
+    try {
+      classifications = await invModel.getClassifications() || []
+      
+      // Verify it's an array
+      if (!Array.isArray(classifications)) {
+        throw new Error('Classifications data is not an array')
+      }
+    } catch (err) {
+      console.error('Error getting classifications:', err)
+      classifications = [] // Fallback to empty array
+    }
+
+    // Build dropdown
+    let classificationList = `<select name="classification_id" id="classification_id" class="form-select" required>`
+    classificationList += `<option value="">Choose a Classification</option>`
+    
+    classifications.forEach((classification) => {
+      classificationList += `
+        <option value="${classification.classification_id}" 
+          ${classification.classification_id === inventoryItem.classification_id ? "selected" : ""}>
+          ${classification.classification_name}
+        </option>`
+    })
+    classificationList += `</select>`
+
+    res.render("./inventory/edit-inventory", {
+      title: `Edit ${inventoryItem.inv_make} ${inventoryItem.inv_model}`,
+      nav: await utilities.getNav(),
+      classificationSelect: classificationList, // Changed to match EJS
+      errors: null,
+      inv_id: inventoryItem.inv_id,
+      inv_make: inventoryItem.inv_make,
+      inv_model: inventoryItem.inv_model,
+      inv_year: inventoryItem.inv_year,
+      inv_description: inventoryItem.inv_description,
+      inv_image: inventoryItem.inv_image,
+      inv_thumbnail: inventoryItem.inv_thumbnail,
+      inv_price: inventoryItem.inv_price,
+      inv_miles: inventoryItem.inv_miles,
+      inv_color: inventoryItem.inv_color,
+      classification_id: inventoryItem.classification_id
+    })
+  } catch (error) {
+    console.error("Error in buildEditInventory:", error)
+    next(error)
+  }
+}
+
+
 /* ****************************************
  * Export Controllers (names preserved)
  * **************************************** */
@@ -342,5 +440,7 @@ module.exports = {
   buildAddClassification,
   addClassification,
   buildAddInventory,
-  addInventory
+  addInventory,
+  buildEditInventory,
+  getInventoryJSON
 };

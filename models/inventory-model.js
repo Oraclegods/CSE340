@@ -143,10 +143,32 @@ async function getClassifications() {
   }
 }
 
+async function getInventoryByClassificationId(classification_id) {
+  try {
+    const data = await pool.query(
+      `SELECT inv_id, inv_make, inv_model 
+       FROM inventory 
+       WHERE classification_id = $1
+       ORDER BY inv_make, inv_model`,
+      [classification_id]
+    );
+    return data.rows;
+  } catch (error) {
+    console.error("getInventoryByClassificationId error:", error);
+    return [];
+  }
+}
+
+
+
+
 module.exports = { 
   getVehicleById, 
+  getInventoryById: getVehicleById,
   getVehiclesByClassification,
   addClassification,
   addInventory,
-  getClassifications
+  getClassifications,
+  getInventoryByClassificationId,
+  //invModel
 };

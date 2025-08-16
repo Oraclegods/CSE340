@@ -1,25 +1,49 @@
-<%- include('../partials/head', { title: 'Inventory Management' }) %>
-<body>
-  <main class="container management-main">
-    <h1>Inventory Management</h1>
-    
-    <% if (flashMessages && flashMessages.success) { %>
-      <div class="alert alert-success">
-        <%= flashMessages.success %>
-      </div>
-    <% } %>
-    
-    <% if (flashMessages && flashMessages.error) { %>
-      <div class="alert alert-danger">
-        <%= flashMessages.error %>
-      </div>
-    <% } %>
+<h1>Inventory Management</h1>
 
-    <div class="management-actions">
-      <a href="/inv/add-classification" class="btn btn-primary">Add New Classification</a>
-      <a href="/inv/add-inventory" class="btn btn-primary">Add New Inventory</a>
+<% if (flashMessages && flashMessages.success) { %>
+  <div class="alert alert-success">
+    <%= flashMessages.success %>
+  </div>
+<% } %>
+
+<% if (flashMessages && flashMessages.error) { %>
+  <div class="alert alert-danger">
+    <%= flashMessages.error %>
+  </div>
+<% } %>
+
+<div class="management-actions container">
+  <a href="/inv/add-classification" class="btn btn-primary">Add New Classification</a>
+  <a href="/inv/add-inventory" class="btn btn-primary">Add New Vehicle</a>
+  
+  <h2>Manage Inventory</h2>
+  <p>Select a classification to view inventory items:</p>
+
+  <!-- Classification Dropdown -->
+  <select name="classification_id" id="classificationDropdown" class="form-select mb-3" required>
+    <option value="">Choose Classification</option>
+    <% classificationList.forEach(classification => { %>
+      <option value="<%= classification.classification_id %>">
+        <%= classification.classification_name %>
+      </option>
+    <% }); %>
+  </select>
+
+  <!-- Empty Table for JavaScript Injection -->
+  <table id="inventoryDisplay"></table>
+
+  <!-- JSON Data Display Area -->
+  <div class="mt-4 p-3 bg-light rounded">
+    <h3>Raw JSON Data</h3>
+    <pre id="jsonDisplay">Select a classification to view JSON data</pre>
+  </div>
+
+  <!-- No JavaScript Warning -->
+  <noscript>
+    <div class="alert alert-warning mt-3">
+      JavaScript is required for this functionality.
     </div>
-  </main>
+  </noscript>
+</div>
 
-</body>
-</html>
+<script src="/js/inventory.js" defer></script>

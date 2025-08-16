@@ -966,60 +966,152 @@ h1 {
   border-color: #2980b9;
 }
 
+
+.error-messages { background: #ffebee; color: #c62828; }
+.success-messages { background: #e8f5e9; color: #2e7d32; }
+.notice-messages { background: #e3f2fd; color: #1565c0; } 
+
+
 /* =============== Management View Specific =============== */
 .management-main {
   text-align: center;
+  padding: 2rem 0;
 }
 
 .management-actions {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
-  margin-top: 2rem;
+  gap: 2rem;
+  margin: 2rem auto;
+  max-width: 1200px;
+  padding: 0 1rem;
 }
 
-@media (min-width: 768px) {
-  .management-actions {
-    flex-direction: row;
-    justify-content: center;
-  }
+.management-actions h2 {
+  color: #2c3e50;
+  margin-bottom: 1rem;
 }
 
-/* =============== Form Layout =============== */
-form {
+/* =============== Classification List Styles =============== */
+.classification-list {
   background: #f8f9fa;
-  padding: 2rem;
+  padding: 1.5rem;
   border-radius: 0.5rem;
-  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
-  max-width: 600px;
-  margin: 0 auto;
+  margin: 1rem auto;
+  max-width: 800px;
 }
 
-label {
-  display: block;
-  margin-bottom: 0.5rem;
-  font-weight: 600;
-  color: #495057;
+.classification-list ul {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.classification-list li {
+  background: white;
+  padding: 0.75rem;
+  border-radius: 0.25rem;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  transition: transform 0.2s;
+}
+
+.classification-list li:hover {
+  transform: translateY(-2px);
+}
+
+.classification-list a {
+  color: #3498db;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.classification-list a:hover {
+  text-decoration: underline;
+}
+
+.classification-list .error {
+  color: #e74c3c;
+  font-style: italic;
+}
+
+/* =============== Inventory Table Styles =============== */
+.inventory-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 2rem auto;
+  box-shadow: 0 0 20px rgba(0,0,0,0.1);
+}
+
+.inventory-table th {
+  background-color: #3498db;
+  color: white;
+  padding: 1rem;
+  text-align: left;
+}
+
+.inventory-table td {
+  padding: 0.75rem;
+  border-bottom: 1px solid #ddd;
+}
+
+.inventory-table tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+.inventory-table tr:hover {
+  background-color: #e6f7ff;
+}
+
+/* =============== Dropdown Styles =============== */
+#classificationDropdown {
+  padding: 0.5rem 1rem;
+  border: 1px solid #ddd;
+  border-radius: 0.25rem;
+  font-size: 1rem;
+  width: 100%;
+  max-width: 400px;
+  margin: 1rem auto;
+  background-color: white;
+}
+
+/* =============== NoScript Warning =============== */
+.noscript-warning {
+  background-color: #fff3cd;
+  color: #856404;
+  padding: 1rem;
+  border-radius: 0.25rem;
+  margin: 1rem 0;
+  border-left: 4px solid #ffeeba;
 }
 
 /* =============== Responsive Adjustments =============== */
+@media (min-width: 768px) {
+  .management-actions {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .classification-list ul {
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  }
+}
+
 @media (max-width: 576px) {
   .container {
     padding: 0 0.5rem;
   }
   
   h1 {
-    font-size: 1.5rem;
+    font-size: 1.75rem;
   }
   
-  form {
+  .classification-list {
     padding: 1rem;
   }
+  
+  .classification-list ul {
+    grid-template-columns: 1fr;
+  }
 }
-
-
-
-
-.error-messages { background: #ffebee; color: #c62828; }
-.success-messages { background: #e8f5e9; color: #2e7d32; }
-.notice-messages { background: #e3f2fd; color: #1565c0; }

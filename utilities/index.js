@@ -3,6 +3,8 @@
 const jwt = require("jsonwebtoken")
 require("dotenv").config()
 
+const pool = require('../database/');
+
 // Bring in the inventory model for DB access
 const invModel = require('../models/inventory-model');
 
@@ -137,6 +139,22 @@ function checkPassword(password) {
   return errors;
 }
 
+async function getClassifications() {
+  try {
+    const data = await pool.query(
+      "SELECT * FROM classification ORDER BY classification_name"
+    );
+
+    console.log("DB Query Results:", data.rows);
+
+
+    return data.rows;
+  } catch (error) {
+    console.error("Error fetching classifications: ", error);
+    return []; // Return empty array on error
+  }
+}
+
 
 // Export all utilities
 module.exports = {
@@ -144,5 +162,6 @@ module.exports = {
   handleErrors,
   buildClassificationList,
   Util,
-  checkPassword
+  checkPassword,
+  getClassifications
 };

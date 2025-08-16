@@ -46,4 +46,28 @@ router.post('/add-classification', async (req, res) => {
 router.get('/add-classification', checkAccess, invController.buildAddClassification);
 router.get('/add-inventory', checkAccess, invController.buildAddInventory);
 
+// working with javascript
+router.get("/getInventory/:classification_id", utilities.handleErrors(invController.getInventoryJSON))
+
+
+// Add this new route with proper commenting
+/**
+ * GET route for displaying the edit inventory view
+ * @name editInventoryView
+ * @route {GET} /inv/edit/:inv_id
+ */
+/*router.get(
+  "/edit/:inv_id",
+  utilities.handleErrors(invController.editInventoryView)
+); */
+
+
+/* ****************************************
+*  Edit Inventory View
+* *************************************** */
+router.get("/edit/:inv_id", invController.buildEditInventory);
+
+
+
+
 module.exports = router;
