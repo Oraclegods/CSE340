@@ -1,45 +1,66 @@
-<% if (messages && messages.error) { %>
-  <div class="alert alert-error"><%= messages.error %></div>
-<% } %>
-<% if (messages && messages.success) { %>
-  <div class="alert alert-success"><%= messages.success %></div>
-<% } %>
-<h1>Update Account</h1>
+<div class="account-update-container">
+  <% if (messages && messages.error) { %>
+    <div class="alert alert-error"><%= messages.error %></div>
+  <% } %>
+  <% if (messages && messages.success) { %>
+    <div class="alert alert-success"><%= messages.success %></div>
+  <% } %>
 
-<form action="/account/update" method="post">
-  <fieldset>
-    <legend>Account Update</legend>
+  <div class="account-update-header">
+    <h1>Update Account</h1>
+  </div>
 
-    <label for="account_firstname">First Name:</label>
-    <input type="text" id="account_firstname" name="account_firstname" required 
-      value="<%= accountData.account_firstname %>">
+  <div class="account-forms-wrapper">
+    <div class="account-update-form">
+      <form action="/account/update" method="post">
+        <fieldset>
+          <legend>Account Update</legend>
+          <div class="form-group">
+            <label for="account_firstname">First Name:</label>
+            <input type="text" id="account_firstname" name="account_firstname" required 
+              value="<%= accountData.account_firstname %>">
+          </div>
 
-    <label for="account_lastname">Last Name:</label>
-    <input type="text" id="account_lastname" name="account_lastname" required
-      value="<%= accountData.account_lastname %>">
+          <div class="form-group">
+            <label for="account_lastname">Last Name:</label>
+            <input type="text" id="account_lastname" name="account_lastname" required
+              value="<%= accountData.account_lastname %>">
+          </div>
 
-    <label for="account_email">Email:</label>
-    <input type="email" id="account_email" name="account_email" required
-      value="<%= accountData.account_email %>">
+          <div class="form-group">
+            <label for="account_email">Email:</label>
+            <input type="email" id="account_email" name="account_email" required
+              value="<%= accountData.account_email %>">
+          </div>
 
-    <input type="hidden" name="account_id" value="<%= accountData.account_id %>">
-    <input type="submit" value="Update Account">
-  </fieldset>
-</form>
+          <input type="hidden" name="account_id" value="<%= accountData.account_id %>">
+          <div class="form-submit">
+            <input type="submit" value="Update Account" class="btn btn-primary">
+          </div>
+        </fieldset>
+      </form>
+    </div>
 
-<form action="/account/update-password" method="post">
-  <fieldset>
-    <legend>Change Password</legend>
+    <div class="password-update-form">
+      <form action="/account/update-password" method="post">
+        <fieldset>
+          <legend>Change Password</legend>
+          <div class="form-group">
+            <label for="account_password">New Password:</label>
+            <input type="password" id="account_password" name="account_password" required
+              pattern="(?=^.{8,}$)(?=.*\d)(?=.*\W+)(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$">
+            <span class="instructions">
+              Passwords must be at least 8 characters and contain at least 1 number,
+              1 capital letter, and 1 special character.
+            </span>
+          </div>
 
-    <label for="account_password">New Password:</label>
-    <input type="password" id="account_password" name="account_password" required
-      pattern="(?=^.{8,}$)(?=.*\d)(?=.*\W+)(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$">
-    <span class="instructions">
-      Passwords must be at least 8 characters and contain at least 1 number,
-      1 capital letter, and 1 special character.
-    </span>
-
-    <input type="hidden" name="account_id" value="<%= accountData.account_id %>">
-    <input type="submit" value="Change Password">
-  </fieldset>
-</form>
+          <input type="hidden" name="account_id" value="<%= accountData.account_id %>">
+          <div class="form-submit">
+            <input type="submit" value="Change Password" class="btn btn-secondary">
+          </div>
+        </fieldset>
+      </form>
+    </div>
+  </div>
+</div>
