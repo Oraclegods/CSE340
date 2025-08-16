@@ -3,7 +3,7 @@
   <% if (vehicles.length > 0) { %>
     <div class="vehicle-thumbnails">
       <% vehicles.forEach(vehicle => { %>
-        <a href="/inventory/<%= vehicle.inv_id %>" class="vehicle-thumbnail">
+        <a href="/inv/<%= vehicle.inv_id %>" class="vehicle-thumbnail">
           <img src="<%= vehicle.image_path %>"
                onerror="this.src='/images/vehicles/default-car.jpg'"
                alt="<%= vehicle.inv_make %> <%= vehicle.inv_model %>">

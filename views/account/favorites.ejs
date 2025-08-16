@@ -1,0 +1,17 @@
+
+<div class="container favorites-page">
+  <h1>My Favorite Vehicles</h1>
+  <div class="favorites-grid">
+    <% if (favorites.length) { %>
+      <% favorites.forEach(vehicle => { %>
+        <div class="vehicle-card">
+          <img src="<%= vehicle.inv_image %>" alt="<%= vehicle.inv_make %> <%= vehicle.inv_model %>">
+          <h3><%= vehicle.inv_make %> <%= vehicle.inv_model %></h3>
+          <a href="/inv/detail/<%= vehicle.inv_id %>" class="btn">View Details</a>
+        </div>
+      <% }) %>
+    <% } else { %>
+      <p>You haven't saved any favorites yet.</p>
+    <% } %>
+  </div>
+</div>

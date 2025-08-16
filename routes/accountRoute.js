@@ -4,6 +4,9 @@ const utilities = require('../utilities');
 const accountController = require('../controllers/accountController');
 const validate = require('../utilities/account-validation');
 const { Util } = require('../utilities');
+const favoriteController = require('../controllers/favoriteController');
+const { requireAuth } = require('../middleware/authMiddleware');
+
 
 /* ****************************************
 *  ROOT ACCOUNT ROUTE (REDIRECT TO LOGIN)
@@ -24,15 +27,17 @@ router.post(
   utilities.handleErrors(accountController.accountLogin)
 );
 
+//new jwt middleware
+router.post('/favorites', 
+  requireAuth, // Uses the new middleware
+  utilities.handleErrors(favoriteController.addToFavorites)
+);
+
+
 // account management new route
 //router.get('/accountManagement', accountController.accountManagement);
 router.get("/accountManagement", Util.checkLogin, utilities.handleErrors(accountController.accountManagement))
 
-// Test route
-router.get('/test-flash', (req, res) => {
-  req.flash('notice', 'This is a test message');
-  res.redirect('/account/login');
-});
 
 
 /* ****************************************
@@ -52,6 +57,31 @@ router.get('/update/:accountId', accountController.buildUpdate);
 router.post('/update', accountController.updateAccount);
 router.post('/update-password', accountController.updatePassword);
 router.get('/logout', accountController.logout);
+
+
+// favorite route 
+router.post('/favorites', requireAuth, utilities.handleErrors(favoriteController.addToFavorites));
+router.get('/favorites', requireAuth, utilities.handleErrors(favoriteController.showFavorites));
+/*router.get('/favorites', 
+  requireAuth,
+  utilities.handleErrors(favoriteController.showFavorites)
+); */
+
+
+
+// Add to accountRoute.js
+router.get('/account/favorites/debug', requireAuth, async (req, res) => {
+  const dbData = await pool.query(
+    `SELECT * FROM favorites WHERE account_id = $1`,
+    [req.user.account_id]
+  );
+  
+  res.json({
+    sessionUser: req.user.account_id,
+    dbResults: dbData.rows
+  });
+});
+
 
 
 module.exports = router;

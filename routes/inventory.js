@@ -35,6 +35,8 @@ router.get("/classification/:classification", utilities.handleErrors(invControll
 
 // Vehicle detail (MUST BE LAST)
 router.get("/:inv_id", utilities.handleErrors(invController.buildVehicleDetail));
+router.get('/detail/:inv_id', utilities.handleErrors(invController.buildVehicleDetail));
+
 
 
 router.post('/add-classification', async (req, res) => {

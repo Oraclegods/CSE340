@@ -47,4 +47,25 @@ function checkAccess(req, res, next) {
 
 
 
-module.exports = { checkJWTToken, checkAccess };
+function requireAuth(req, res, next) {
+  const token = req.cookies.jwt;
+  
+  if (!token) {
+    req.flash('error', 'Please log in first');
+    return res.redirect('/account/login');
+  }
+
+  jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, decoded) => {
+    if (err) {
+      res.clearCookie('jwt');
+      req.flash('error', 'Session expired');
+      return res.redirect('/account/login');
+    }
+    
+    req.user = decoded; // Attach user data to request object
+    next();
+  });
+}
+
+
+module.exports = { checkJWTToken, checkAccess, requireAuth };

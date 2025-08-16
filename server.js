@@ -31,7 +31,14 @@ const app = express();
 // 1. Cookie parser (should be first)
 app.use(cookieParser());
 
-// 2. Session middleware (required for flash messages)
+// ===== NEW: Request Logger =====
+app.use((req, res, next) => {
+  const timestamp = new Date().toLocaleString();
+  console.log(`[${timestamp}] ${req.method} ${req.originalUrl}`);
+  next();
+});
+
+// 2. Session middleware
 const pgSession = connectPgSimple(session);
 app.use(session({
   store: new pgSession({
@@ -39,8 +46,8 @@ app.use(session({
     pool,
   }),
   secret: process.env.SESSION_SECRET,
-  resave: false, // Changed to false for better performance
-  saveUninitialized: false, // Changed to false for GDPR compliance
+  resave: false,
+  saveUninitialized: false,
   name: 'sessionId',
   cookie: {
     secure: process.env.NODE_ENV === 'production',
@@ -54,6 +61,31 @@ app.use(flash());
 // 4. Body parsers (MUST come before routes)
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// ===== NEW: Static File Caching =====
+app.use(express.static('public', { 
+  maxAge: process.env.NODE_ENV === 'production' ? '7d' : '1d',
+  etag: true
+}));
+
+
+// Ensure this middleware exists and comes AFTER session setup
+app.use((req, res, next) => {
+  res.locals.account_id = req.session?.account_id || null; // Add this line
+  res.locals.loggedin = req.session?.loggedin || false;
+  res.locals.accountData = req.session?.accountData || null;
+  next();
+});
+
+// Add to server.js (temporary test route)
+app.get('/test-session', (req, res) => {
+  console.log('Current session:', req.session);
+  res.json({
+    sessionID: req.sessionID,
+    sessionData: req.session
+  });
+});
+
 
 // 5. View engine setup
 app.set("view engine", "ejs");
@@ -71,19 +103,15 @@ app.use(async (req, res, next) => {
   }
 });
 
-// session middleware 
-
+// Session middleware 
 app.use((req, res, next) => {
   res.locals.loggedin = req.session?.loggedin || false;
   res.locals.accountData = req.session?.accountData || null;
   next();
 });
 
-//JWT middleware
-// app.use(utilities.checkJWTToken)
+// JWT middleware
 app.use((req, res, next) => utilities.Util.checkJWTToken(req, res, next));
-
-// jwt middleware for auth
 app.use(checkJWTToken);
 
 /* ***********************
@@ -97,11 +125,10 @@ app.use(static);
 app.get("/", utilities.handleErrors(baseController.buildHome));
 
 // Inventory routes
-app.use("/inv", inventoryRoute); // Consolidated to single inventory route
+app.use("/inv", inventoryRoute);
 
 // Account routes
 app.use('/account', accountRoute);
-//app.use('/account', require('./routes/accountRoute'));
 
 /* ***********************
  * Error Handling - LAST MIDDLEWARE
@@ -124,14 +151,21 @@ app.use(async (err, req, res, next) => {
   });
 });
 
-// Custom error handler middleware (if you have specific error handling logic)
+// Custom error handler middleware
 app.use(errorHandler);
+
+
+app.use((req, res, next) => {
+  console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`);
+  next();
+});
+
 
 /* ***********************
  * Server Startup
  *************************/
-const port = process.env.PORT || 5500; // Added fallback port
-const host = process.env.HOST || 'localhost'; // Added fallback host
+const port = process.env.PORT || 5500;
+const host = process.env.HOST || 'localhost';
 
 app.listen(port, () => {
   console.log(`Server running on http://${host}:${port}`);

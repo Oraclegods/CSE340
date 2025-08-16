@@ -5,6 +5,7 @@
   <% if (loggedin) { %>
     <div><a href="/account" class="welcome-link">Welcome <%= accountData.account_firstname %></a></div>
     <div><a href="/account/logout">Logout</a></div>
+    <div> <a href="/account/favorites" class="favorites-link">⭐ My Favorites</a></div>
   <% } else { %>
     <div id="tools">
       <a title="Click to log in" href="/account/">My Account</a>

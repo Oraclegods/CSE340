@@ -156,6 +156,13 @@ async function getClassifications() {
 }
 
 
+// favorite validation 
+function validateFavoriteData(account_id, inv_id) {
+  if (!Number.isInteger(account_id)) throw new Error('Invalid account ID');
+  if (!Number.isInteger(inv_id)) throw new Error('Invalid vehicle ID');
+  return true;
+}
+
 // Export all utilities
 module.exports = {
   getNav,
@@ -163,5 +170,6 @@ module.exports = {
   buildClassificationList,
   Util,
   checkPassword,
-  getClassifications
+  getClassifications,
+  validateFavoriteData
 };

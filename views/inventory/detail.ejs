@@ -1,5 +1,21 @@
 <div class="vehicle-detail-container">
   <div class="certification-banner">
+
+    <!-- Show flash messages -->
+<% if (messages.notice && messages.notice.length > 0) { %>
+  <div class="alert alert-success">
+    <%= messages.notice[0] %>
+  </div>
+<% } %>
+
+<% if (messages.error && messages.error.length > 0) { %>
+  <div class="alert alert-danger">
+    <%= messages.error[0] %>
+  </div>
+<% } %>
+
+
+
     <p>This vehicle has passed inspection by an ASE-certified technician.</p>
     <p class="enterprise-certified">enterprise.certified</p>
   </div>
@@ -23,7 +39,18 @@
           <p class="mileage"><%= Number(vehicle.inv_miles).toLocaleString() %> miles</p>
         </div>
       </div>
-      
+
+      <% if (loggedin) { %>
+        <form action="/account/favorites" method="POST" class="favorite-form">
+          <input type="hidden" name="inv_id" value="<%= vehicle.inv_id %>">
+          <button type="submit" class="btn-favorite">❤️ Add to Favorite</button>
+        </form>
+      <% } else { %>
+        <div class="favorite-login-prompt">
+          <a href="/account/login" class="login-to-save">Log in to add this vehicle to Favorite</a>
+        </div>
+      <% } %>
+
       <div class="specs-grid">
         <div class="spec-item">
           <span class="spec-label">MPG:</span>
